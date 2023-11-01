@@ -8,7 +8,7 @@ public:
 
     void executeInstruction(std::string instruction) {
         // Parse the instruction and extract relevant fields
-        // This is a placeholder. In a real implementation, you would parse the instruction string to extract these fields.
+    
         std::string op;
         int rd, rs1, rs2, imm;
 
