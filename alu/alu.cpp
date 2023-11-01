@@ -162,12 +162,12 @@ int main() {
     RiscVProcessor processor;
 
     // Execute some instructions
-    processor.executeInstruction("LUI 1 100");  // Load Upper Immediate
+    processor.executeInstruction("LUI 1 100");  // Load Upper Immediate 
     processor.executeInstruction("ADDI 2 1 50");  // Add Immediate
     processor.executeInstruction("SUB 3 2 1");  // Subtract
     processor.executeInstruction("AND 4 2 3");  // Bitwise AND
     processor.executeInstruction("OR 5 2 3");  // Bitwise OR
-    processor.executeInstruction("XOR 6 2 3");  // Bitwise XOR
+    processor.executeInstruction("XOR 6 2 3");  // Bitwise Exclusive Or
     processor.executeInstruction("SLL 7 2 3");  // Shift Left Logical
     processor.executeInstruction("SRL 8 2 3");  // Shift Right Logical
     processor.executeInstruction("SRA 9 2 3");  // Shift Right Arithmetic
