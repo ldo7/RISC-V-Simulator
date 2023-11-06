@@ -69,21 +69,21 @@
 uint32_t alu::calculate(uint32_t in1, uint32_t in2, uint8_t op) {
     uint32_t out;
 
-    if (op == ALU_OP_ADD) {
+    if (op == ALU_OP_ADD) {  //add
         out = in1 + in2;
-    } else if (op == ALU_OP_SLL) {
+    } else if (op == ALU_OP_SLL) {  // shift left logical
         out = in1 << in2;
-    } else if (op == ALU_OP_XOR) {
+    } else if (op == ALU_OP_XOR) {  // exclusive or
         out = in1 ^ in2;
-    } else if (op == ALU_OP_OR) {
+    } else if (op == ALU_OP_OR) {   //or
         out = in1 | in2;
-    } else if (op == ALU_OP_AND) {
+    } else if (op == ALU_OP_AND) {  //AND 
         out = in1 & in2;
-    } else if (op == ALU_OP_SRL) {
-        out = in1 >> in2; // Shift Right Logical
-    } else if (op == ALU_OP_SUB) {
+    } else if (op == ALU_OP_SRL) {  // shift right logical 
+        out = in1 >> in2; 
+    } else if (op == ALU_OP_SUB) {  //subtract
         out = in1 - in2;
-    } else if (op == ALU_OP_SRA) {
+    } else if (op == ALU_OP_SRA) { 
         out = ((int32_t)in1) >> in2; // Shift Right Arithmetic
     } else if (op == ALU_OP_SLT) {
         out = (uint32_t)0 | ((int32_t)in1) < ((int32_t)in2); // Set If Less Than (Signed)
