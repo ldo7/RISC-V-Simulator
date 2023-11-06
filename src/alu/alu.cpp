@@ -60,6 +60,9 @@
 //     return 0;
 // }
 
+
+//changed based on Loni's review
+
 #include <cstdint>
 #include "alu.h"
 
@@ -88,7 +91,7 @@ uint32_t alu::calculate(uint32_t in1, uint32_t in2, uint8_t op) {
         out = (uint32_t)0 | (in1 < in2); // Set If Less Than (Unsigned)
     } else {
         out = (uint32_t)0;
-        std::cout << "ALU: cannot recognize the operating instruction" << std::endl;
+        std::cout << "ALU: invalid operating instruction" << std::endl;
     }
 
     return out;
