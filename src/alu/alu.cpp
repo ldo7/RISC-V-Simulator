@@ -1,3 +1,4 @@
+
 // #include <iostream>
 
 //     uint32_t alu::calculate(uint32_t in1, uint32_t in2, uint8_t op) { 
@@ -95,4 +96,3 @@ uint32_t ALU::calculate(uint32_t in1, uint32_t in2, uint8_t op) {
     }
 
     return out;
-}

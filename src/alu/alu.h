@@ -1,4 +1,5 @@
 #include <iostream>
+
 #ifndef RISCV_SIMULATOR_ALU_H
 #define RISCV_SIMULATOR_ALU_H
 
