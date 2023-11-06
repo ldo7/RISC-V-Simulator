@@ -66,7 +66,7 @@
 #include <cstdint>
 #include "alu.h"
 
-uint32_t alu::calculate(uint32_t in1, uint32_t in2, uint8_t op) {
+uint32_t ALU::calculate(uint32_t in1, uint32_t in2, uint8_t op) {
     uint32_t out;
 
     if (op == ALU_OP_ADD) {  //add
