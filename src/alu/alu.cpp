@@ -159,7 +159,11 @@ int main()
 {
     alu alu;
 
+<<<<<<< HEAD
     // Execute instructions
+=======
+    // Execute some instructions
+>>>>>>> main
     alu.executeInstruction("LUI 1 100");        // Load Upper Immediate
     alu.executeInstruction("ADDI 2 1 50");      // Add Immediate
     alu.executeInstruction("SUB 3 2 1");        // Subtract

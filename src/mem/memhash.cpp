@@ -6,19 +6,19 @@ using namespace std;
 
 class HashMap {
 private:
-    static const int mem_size = 1024; // Choose an appropriate size for your hash map
+    static const int mem_size = 1024; // Declare size for hash map
     vector<pair<uint32_t, uint32_t>> hashTable[mem_size]; // Each entry in the hash table is a vector of key-value pairs
     mem memory; // The mem class for memory operations
 
-    // Hash function to map keys to indices
+    // Hash function to map keys
     int hash(uint32_t key) {
         return key % mem_size;
     }
 
 public:
     HashMap() {
-        // Initialize memory
-        memory = mem();
+    
+        memory = mem(); // Initialize memory
     }
 
     void insert(uint32_t key, uint32_t value) {

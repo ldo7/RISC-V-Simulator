@@ -5,9 +5,14 @@
 #include <vector>
 #include <unistd.h>
 #include "cpu/cpu.h"
+<<<<<<< HEAD
 
 using namespace std;
 
+=======
+using namespace std;
+
+>>>>>>> main
 void readFile();
 void writeFile();
 void displayOptions();
