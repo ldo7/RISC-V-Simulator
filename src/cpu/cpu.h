@@ -20,8 +20,8 @@ public: // functions called in Main
   string getAsmInstruction();
 private:
   mem mem;
-  reg reg;
-  alu alu;
+  reg regs;
+  alu ALU;
   uint32_t PC;
   string AsmInstruction; 
   string setAsmInstruction();
@@ -34,5 +34,8 @@ private:
   uint32_t getimm12(uint32_t instr);
   uint32_t get_branch_imm(uint32_t instr);
   uint32_t get_jal_offset(uint32_t instr);
+  uint8_t getALU_op(uint32_t instr);
+  void r_type(uint32_t instr);
+  
 };
 #endif
