@@ -1,7 +1,7 @@
 #include <cstdint>
 
-#ifndef REGISTER_H
-#define REGISTER_H
+#ifndef __REG_H
+#define __REG_H
 
 class reg
 {

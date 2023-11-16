@@ -30,16 +30,16 @@ void reg::writeReg(uint8_t rd, uint32_t value)
     }
 }
 
-int main()
-{
-    reg registerFile;
+// int main()
+// {
+//     reg registerFile;
 
-    // test: Write a value to register x10
-    registerFile.writeReg(10, 42);
+//     // test: Write a value to register x10
+//     registerFile.writeReg(10, 42);
 
-    // tset: Read the value from register x10
-    uint32_t value = registerFile.readReg(10);
-    std::cout << "Value in x10: " << value << endl;
+//     // tset: Read the value from register x10
+//     uint32_t value = registerFile.readReg(10);
+//     std::cout << "Value in x10: " << value << endl;
 
-    return 0;
-}
+//     return 0;
+// }

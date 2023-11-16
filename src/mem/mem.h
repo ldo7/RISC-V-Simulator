@@ -1,11 +1,11 @@
+#include <iostream>
 #include <cstdint>
-// #include <vector>
 
-#ifndef RISCV_SIMULATOR_MEM_H
-#define RISCV_SIMULATOR_MEM_H
+#ifndef __MEM_H
+#define __MEM_H
 
 class mem {
-    const int static mem_size = 2048;  //change to hashmap
+    const int static mem_size = 2048; 
     uint32_t sram[2048];
 public:
     mem();
