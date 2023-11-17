@@ -1,4 +1,4 @@
-#include <iostream>pull
+#include <iostream>
 #include <fstream>
 #include <bitset>
 #include <ctime>
@@ -7,7 +7,7 @@
 #include "../cpu/cpu.cpp"
 using namespace std;
 
-void readFile();
+vector<uint32_t> readFile();
 void writeFile();
 void displayOptions();
 void userInput();
@@ -19,10 +19,9 @@ uint32_t breakpoints[5] = {0xFFFFFFFF}; // initialize to FF (never reached)
 
 int main()
 {
-  cpu cpu;
-  readFile(); // LOAD INSTRUCTIONS IN MEM
-  // cpu cpu; // INTANTIATE & RUN CPU
-  // cpu.run();
+  vector<uint32_t> instructions = readFile(); // LOAD INSTRUCTIONS 
+  cpu cpu(instructions);                      // INTANTIATE & RUN CPU
+  cpu.run();
   // bool cpu_is_running = true;
   // while (true)
   // {
@@ -47,55 +46,36 @@ int main()
 }
 
 // Parse .DAT file
-void readFile()
+vector<uint32_t> readFile()
 {
+  vector<uint32_t> result;
   // OPEN file
   string line, input = "input.dat";
   ifstream file(input);
-  vector<uint32_t> list;
   if (!file)
-  {
     cout << "ERROR. Cannot open file";
-    return;
-  }
-  cout << "RISCV SIMULATOR\n"
-       << "\n~~ Loading instructions ~~\n";
-
-  // READ file
-  bitset<32> combinedBinary(0); // intialize 32-bit value = 0000 0000 0000 0000
-  string combinedString;
-  while (getline(file, line))
+  else
   {
-    uint32_t val = 0;
-    // val = bitset<32>(line).to_ulong(); // Convert the binary string to uint32_t
-
-    // every 4 lines = 1 instruction
-    combinedString = line + combinedString;
-    if (combinedString.length() == 32) // append line until 32-bits
+    cout << "RISCV SIMULATOR\n"
+         << "\n~~ Loading instructions ~~\n";
+    // READ file
+    string str = "";
+    string binary;
+    while (file >> binary)
     {
-      // convert string to binary
-      for (int i = 0; i < 32; i++)
+      str = binary + str;
+      if (str.length() == 32)
       {
-        if (combinedString[i] == '1')
-          combinedBinary.set(i);
-        else
-          combinedBinary.reset(i);
+        uint32_t val = bitset<32>(str).to_ulong(); // Convert string to binary
+        result.push_back(val);                     // save instruction
+        cout << str << endl;
+        str.clear();
       }
-      // insert the value into the vector
-      list.push_back(combinedBinary.to_ulong());
-      // cout << combinedBinary<<"\n";  //DEBUG, check little-endian order
-      combinedBinary.reset();
-      combinedString.clear();
     }
+    file.close();
+    cout << "~~ Loading complete ~~\n";
   }
-  file.close();
-
-  for (int i = 0; i < list.size(); i++) // DEBUG
-  {
-    cout << list[i] << "\n";
-  }
-
-  cout << "~~ Loading complete ~~\n";
+  return result;
 }
 
 // Write to .ASM file for Debugging
