@@ -13,7 +13,7 @@ reg::reg()
 }
 
 // Read the value from register rd
-uint32_t reg::readReg(uint8_t rd) const
+uint32_t reg::readReg(int8_t rd) const
 {
     if (rd == 0)
         return 0; // x0 is hardwired to zero
@@ -21,7 +21,7 @@ uint32_t reg::readReg(uint8_t rd) const
 }
 
 // Write a value to register rd
-void reg::writeReg(uint8_t rd, uint32_t value)
+void reg::writeReg(uint8_t rd, int32_t value)
 {
     if (rd != 0)
     {
@@ -29,17 +29,3 @@ void reg::writeReg(uint8_t rd, uint32_t value)
         registers[rd] = value;
     }
 }
-
-// int main()
-// {
-//     reg registerFile;
-
-//     // test: Write a value to register x10
-//     registerFile.writeReg(10, 42);
-
-//     // tset: Read the value from register x10
-//     uint32_t value = registerFile.readReg(10);
-//     std::cout << "Value in x10: " << value << endl;
-
-//     return 0;
-// }

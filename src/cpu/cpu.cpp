@@ -45,10 +45,6 @@ void cpu::run()
             break;
         }
     }
-
-    // switch case for instruction type
-
-    // convert to String
 }
 
 // USER OPTIONS FUNCTIONS
@@ -97,22 +93,24 @@ uint8_t cpu::getfunct7(uint32_t instr)
 uint16_t cpu::getimm12(uint32_t instr)
 {
     uint16_t val = (uint16_t)(instr >> 20) & 0b0111111111111;
-    if (val & 0b100000000000)               // check msb
-        return (val | 0b1111000000000000);  // if (-), sign-extend
+    if (val & 0b100000000000)              // check msb
+        return (val | 0b1111000000000000); // if (-), sign-extend
     return val;
 }
 uint8_t cpu::getALU_op(uint32_t instr)
 {
     uint8_t funct3 = getfunct3(instr);
     uint8_t funct7 = getfunct7(instr);
-    return funct3 | funct7;
+
+    if (funct7 == 0b0100000)
+        return funct3 | funct7;
+    return funct3;
 }
 
 void cpu::r_type(uint32_t instr)
 {
     cout << "R-type" << endl; // DEBUG
     uint8_t alu_op = getALU_op(instr);
-    cout << "aluOp:" << static_cast<int>(alu_op);
     uint8_t rd = getrd(instr);
     uint8_t rs1 = getrs1(instr);
     uint8_t rs2 = getrs2(instr);
@@ -121,6 +119,12 @@ void cpu::r_type(uint32_t instr)
     uint32_t val2 = reg.readReg(rs2);
     uint32_t result = alu.calculate(val1, val2, alu_op); // execute
     reg.writeReg(rd, result);                            // write to reg
+
+    // DEBUG
+    // cout << "(binary)aluOp:" << bitset<sizeof(int) * 8>(alu_op) << endl;
+    cout << "rd:" << static_cast<int>(rd) << " rs1:" << static_cast<int>(rs1) << " rs2:" << static_cast<int>(rs2) << endl;
+    cout << "val1:" << static_cast<int>(val1) << " val2:" << static_cast<int>(val2) << " result:" << static_cast<int>(result) << endl;
+    // cout << "(binary)val1:" << bitset<sizeof(int) * 8>(val1) << endl;
 }
 void cpu::i_type(uint32_t instr)
 {
@@ -133,20 +137,20 @@ void cpu::i_type(uint32_t instr)
     uint8_t alu_op = getfunct3(instr) | 0b00000000;
     uint8_t rd = getrd(instr);
     uint8_t rs1 = getrs1(instr);
-    uint8_t rs2 = getrs2(instr); //only for shift instructions
+    uint8_t rs2 = getrs2(instr); // only for shift instructions
 
-    uint32_t val1 = reg.readReg(rs1); // read from reg
-    uint16_t val2 = getimm12(instr);
+    int32_t val1 = reg.readReg(rs1); // read from reg
+    int16_t val2 = getimm12(instr);
     if (alu_op == SLLI || alu_op == SRLI || alu_op == SRAI)
         val2 = reg.readReg(rs2); // getShamt()
 
-    uint32_t result = alu.calculate(val1, (uint32_t)val2, alu_op); // execute
-    reg.writeReg(rd, result);                            // write to reg
+    int32_t result = alu.calculate(val1, (uint32_t)val2, alu_op); // execute
+    reg.writeReg(rd, result);                                     // write to reg
 
     // DEBUG
-    // cout << "rd:" << static_cast<int>(rd) << " rs1:" << static_cast<int>(rs1) << " rs2:" << static_cast<int>(val2) << endl;
-    // cout << "val1:" << static_cast<int>(val1) << " val2:" << static_cast<int>(val2) << " result:" << static_cast<int>(result) << endl;
-    // cout << "(binary)val2:" <<bitset<sizeof(int) * 8>(val2)<<endl;
+    cout << "rd:" << static_cast<int>(rd) << " rs1:" << static_cast<int>(rs1) << " imm:" << static_cast<int>(val2) << endl;
+    cout << "val1:" << static_cast<int>(val1) << " val2:" << static_cast<int>(val2) << " result:" << static_cast<int>(result) << endl;
+    cout << "(binary)val2:" << bitset<sizeof(int) * 8>(val2) << endl;
 }
 
 void cpu::s_type(uint32_t instr)
@@ -169,4 +173,28 @@ void cpu::lui(uint32_t instr)
 }
 void cpu::auipc(uint32_t instr)
 {
+}
+
+string stringify(int32_t op, int32_t rd,int32_t rs1,int32_t rs2){
+    //aluOp = aluOp()
+    const static uint8_t R = 0b00110011;    
+    const static uint8_t I = 0b00010011;   
+    const static uint8_t L = 0b00000011;   
+    const static uint8_t S = 0b00100011;   
+    const static uint8_t B = 0b01100011;   
+    const static uint8_t JAL = 0b01101111;  
+    const static uint8_t JALR = 0b01100111;
+    const static uint8_t LUI = 0b00110111;
+    const static uint8_t AUIPC = 0b00010111;
+    
+    const static int8_t ADD = 0b00000000; // alu opcodes
+    const static int8_t SUB = 0b00100000;
+    const static int8_t OR = 0b00000110; 
+    const static int8_t AND = 0b00000111;
+    const static int8_t XOR = 0b00000100;
+    const static int8_t SRL = 0b00000101;
+    const static int8_t SRA = 0b00100101;
+    const static int8_t SLL = 0b00000001;
+    const static int8_t SLT = 0b00000010;
+    const static int8_t SLTU = 0b00000011;
 }
