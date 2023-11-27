@@ -2,6 +2,9 @@
 #include "cpu.h"
 using namespace std;
 
+bool debug = true;
+uint8_t x=0;
+
 cpu::cpu(vector<uint32_t> instr)
 {
     this->instr = instr;
@@ -43,6 +46,9 @@ void cpu::run()
         case LUI:
             lui(instr[i]);
             break;
+        case AUIPC:
+            auipc(instr[i]);
+            break;
         }
     }
 }
@@ -59,10 +65,6 @@ uint32_t cpu::getReg(uint8_t index)
 uint32_t cpu::getMem(uint32_t addr)
 {
     return mem.get_mem(addr);
-}
-string cpu::convertASM(uint8_t op, uint8_t in1, uint8_t in2)
-{
-    return "";
 }
 
 // DECODE FUNCTIONS
@@ -90,11 +92,11 @@ uint8_t cpu::getfunct7(uint32_t instr)
 {
     return (uint8_t)(instr >> 25) & 0b01111111;
 }
-uint16_t cpu::getimm12(uint32_t instr)
+int16_t cpu::getimm12(uint32_t instr)
 {
-    uint16_t val = (uint16_t)(instr >> 20) & 0b0111111111111;
-    if (val & 0b100000000000)              // check msb
-        return (val | 0b1111000000000000); // if (-), sign-extend
+    int16_t val = (int16_t)(instr >> 20) & 0b0111111111111;
+    if (val & 0b100000000000)               // check msb
+        return (val | 0b1111000000000000);  // if (-), sign-extend
     return val;
 }
 uint8_t cpu::getALU_op(uint32_t instr)
@@ -109,50 +111,45 @@ uint8_t cpu::getALU_op(uint32_t instr)
 
 void cpu::r_type(uint32_t instr)
 {
-    cout << "R-type" << endl; // DEBUG
     uint8_t alu_op = getALU_op(instr);
     uint8_t rd = getrd(instr);
     uint8_t rs1 = getrs1(instr);
-    uint8_t rs2 = getrs2(instr);
+    int8_t rs2 = getrs2(instr);
 
-    uint32_t val1 = reg.readReg(rs1); // read from reg
-    uint32_t val2 = reg.readReg(rs2);
+    uint16_t val1 = reg.readReg(rs1);                   // read from reg
+    uint16_t val2 = reg.readReg(rs2);
     uint32_t result = alu.calculate(val1, val2, alu_op); // execute
     reg.writeReg(rd, result);                            // write to reg
 
     // DEBUG
-    // cout << "(binary)aluOp:" << bitset<sizeof(int) * 8>(alu_op) << endl;
-    cout << "rd:" << static_cast<int>(rd) << " rs1:" << static_cast<int>(rs1) << " rs2:" << static_cast<int>(rs2) << endl;
+    cout << stringify(instr,rd,rs1,rs2)<< endl;
     cout << "val1:" << static_cast<int>(val1) << " val2:" << static_cast<int>(val2) << " result:" << static_cast<int>(result) << endl;
-    // cout << "(binary)val1:" << bitset<sizeof(int) * 8>(val1) << endl;
 }
 void cpu::i_type(uint32_t instr)
 {
-    cout << "I-type" << endl; // DEBUG
-    // delete, issue w/ include "alu.h"
-    const static uint8_t SLLI = 0b00000001;
-    const static uint8_t SRLI = 0b00001001;
-    const static uint8_t SRAI = 0b00000011;
-    //
-    uint8_t alu_op = getfunct3(instr) | 0b00000000;
+    uint8_t alu_op = getALU_op(instr);
     uint8_t rd = getrd(instr);
     uint8_t rs1 = getrs1(instr);
-    uint8_t rs2 = getrs2(instr); // only for shift instructions
+    int8_t rs2 = getrs2(instr); // only for shift instructions
 
-    int32_t val1 = reg.readReg(rs1); // read from reg
+    int16_t val1 = reg.readReg(rs1); // read from reg
     int16_t val2 = getimm12(instr);
-    if (alu_op == SLLI || alu_op == SRLI || alu_op == SRAI)
-        val2 = reg.readReg(rs2); // getShamt()
+    if (alu_op == SLL || alu_op == SRL || alu_op == SRA)
+        val2 = rs2; // getShamt()
 
-    int32_t result = alu.calculate(val1, (uint32_t)val2, alu_op); // execute
-    reg.writeReg(rd, result);                                     // write to reg
+    cout << stringify(instr, rd, rs1, val2) << endl;
+    int32_t result = alu.calculate(val1, val2, alu_op); // execute
+    reg.writeReg(x, result);                           // write to reg
 
+    if(debug){
+        x=rd;
+        debug=false;
+    }
     // DEBUG
-    cout << "rd:" << static_cast<int>(rd) << " rs1:" << static_cast<int>(rs1) << " imm:" << static_cast<int>(val2) << endl;
     cout << "val1:" << static_cast<int>(val1) << " val2:" << static_cast<int>(val2) << " result:" << static_cast<int>(result) << endl;
-    cout << "(binary)val2:" << bitset<sizeof(int) * 8>(val2) << endl;
+    cout << "(binary)result:" << bitset<32>(result)<<endl;
+    cout << "register: "<<reg.readReg(rd)<<endl;  
 }
-
 void cpu::s_type(uint32_t instr)
 {
 }
@@ -175,26 +172,71 @@ void cpu::auipc(uint32_t instr)
 {
 }
 
-string stringify(int32_t op, int32_t rd,int32_t rs1,int32_t rs2){
-    //aluOp = aluOp()
-    const static uint8_t R = 0b00110011;    
-    const static uint8_t I = 0b00010011;   
-    const static uint8_t L = 0b00000011;   
-    const static uint8_t S = 0b00100011;   
-    const static uint8_t B = 0b01100011;   
-    const static uint8_t JAL = 0b01101111;  
-    const static uint8_t JALR = 0b01100111;
-    const static uint8_t LUI = 0b00110111;
-    const static uint8_t AUIPC = 0b00010111;
+//convert binary to asm string representation
+string cpu::stringify(int32_t instr, int8_t rd,int8_t rs1,int16_t rs2)
+{
+    string str="";
+    uint8_t opcode = getOpcode(instr);
+    uint8_t aluOp = getALU_op(instr);
+    uint8_t funct3 = getfunct3(instr);
+    uint8_t funct7 = getfunct7(instr);
     
-    const static int8_t ADD = 0b00000000; // alu opcodes
-    const static int8_t SUB = 0b00100000;
-    const static int8_t OR = 0b00000110; 
-    const static int8_t AND = 0b00000111;
-    const static int8_t XOR = 0b00000100;
-    const static int8_t SRL = 0b00000101;
-    const static int8_t SRA = 0b00100101;
-    const static int8_t SLL = 0b00000001;
-    const static int8_t SLT = 0b00000010;
-    const static int8_t SLTU = 0b00000011;
+    switch(opcode){
+        case R:
+        case I:
+            switch (aluOp) {
+                case ADD: str = "add"; break;
+                case SUB: str = "sub"; break;
+                case XOR: str = "xor"; break;
+                case OR: str = "or"; break;
+                case AND: str = "and"; break;
+                case SLL: str = "sll"; break;
+                case SRL: str = "srl"; break;
+                case SRA: str = "sra"; break;
+                case SLT: str = "slt"; break;
+                case SLTU: str = "sltu"; break;
+                default: str = "invalid aluOp"; 
+            }
+            if (opcode == I) str+="i";
+            break;
+        case L:
+            switch (funct3) {
+                case 0b000: str = "lb"; break;
+                case 0b001: str = "lh"; break;
+                case 0b010: str = "lw"; break;
+                case 0b100: str = "lbu"; break;
+                case 0b101: str = "lhu"; break;
+                default: str = "invalid L-type"; break;
+            }
+            break;
+        case S:
+            switch (funct3) {
+                case 0b000: str = "sb"; break;
+                case 0b001: str = "sh"; break;
+                case 0b010: str = "sw"; break;
+                default: str = "unknown S-type"; break;
+            }
+            break;
+        case B:
+            switch (funct3) {
+                case 0b000: str = "beq"; break;
+                case 0b001: str = "bne"; break;
+                case 0b100: str = "blt"; break;
+                case 0b101: str = "bge"; break;
+                case 0b110: str = "bltu"; break;
+                case 0b111: str = "bgeu"; break;
+                default: str = "unknown B-type"; break;
+            }
+            break;
+        case JAL: str = "jal"; break;
+        case JALR: str = "jalr"; break;
+        case LUI: str = "lui"; break;
+        case AUIPC: str = "auipc"; break;
+        default: str="invalid instruction";
+    }
+
+    str = "\n" + str + " x" + to_string(rd) + ", x" + to_string(rs1);
+    if (opcode == I) str += ", " + to_string(rs2);
+    else str += ", x" + to_string(rs2);
+    return str;
 }

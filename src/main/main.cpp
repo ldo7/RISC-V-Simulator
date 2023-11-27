@@ -19,7 +19,8 @@ uint32_t breakpoints[5] = {0xFFFFFFFF}; // initialize to FF (never reached)
 
 int main()
 {
-  vector<uint32_t> instructions = readFile(); // LOAD INSTRUCTIONS 
+  string filename = "input.dat";
+  vector<uint32_t> instructions = readFile(filename); // LOAD INSTRUCTIONS 
   cpu cpu(instructions);                      // INTANTIATE & RUN CPU
   cpu.run();
   // bool cpu_is_running = true;
@@ -46,11 +47,11 @@ int main()
 }
 
 // Parse .DAT file
-vector<uint32_t> readFile()
+vector<uint32_t> readFile(string filename)
 {
   vector<uint32_t> result;
   // OPEN file
-  string line, input = "input.dat";
+  string line, input = filename;;
   ifstream file(input);
   if (!file)
     cout << "ERROR. Cannot open file";
@@ -68,7 +69,7 @@ vector<uint32_t> readFile()
       {
         uint32_t val = bitset<32>(str).to_ulong(); // Convert string to binary
         result.push_back(val);                     // save instruction
-        cout << str << endl;
+        // cout << str << endl;
         str.clear();
       }
     }

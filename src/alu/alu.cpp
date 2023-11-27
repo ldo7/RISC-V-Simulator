@@ -1,31 +1,37 @@
-#include "alu.h"
-using namespace std;
+#include <iostream>
+#include <cstdint>
+#include <bitset>
 
-int32_t alu::calculate(int32_t in1, int32_t in2, int8_t op){
-    int32_t out;
-    if (op == ADD) {  //add
-        out = in1 + in2;
-    } else if (op == SUB) {  //subtract
-        out = in1 - in2;
-    } else if (op == XOR) {  // exclusive or
-        out = in1 ^ in2;
-    } else if (op == OR) {   // or
-        out = in1 | in2;
-    } else if (op == AND) {  // and 
-        out = in1 & in2;
-    } else if (op == SLL) {  // shift left logical
-        out = (uint32_t)in1 << (uint32_t)in2;
-    } else if (op == SRL) {  // shift right logical 
-        out = (uint32_t)in1 >> (uint32_t)in2; 
-    } else if (op == SRA) { 
-        out = in1 >> in2; // Shift Right Arithmetic
-    } else if (op == SLT) {
-        out = (int32_t)0 | ((in1) < (in2)); // Set If Less Than (Signed)
-    } else if (op == SLTU) {
-        out = (int32_t)0 | (in1 < in2); // Set If Less Than (Unsigned)
-    } else {
-        out = (int32_t)0;
-        cout << "ALU: invalid aluOp" << endl;
+class alu
+{
+public:
+    int32_t calculate(int16_t in1, int16_t in2, int8_t op);
+    const static int8_t ADD = 0b00000000; // alu opcodes
+    const static int8_t SUB = 0b00100000;
+    const static int8_t OR = 0b00000110; 
+    const static int8_t AND = 0b00000111;
+    const static int8_t XOR = 0b00000100;
+    const static int8_t SRL = 0b00000101;
+    const static int8_t SRA = 0b00100101;
+    const static int8_t SLL = 0b00000001;
+    const static int8_t SLT = 0b00000010;
+    const static int8_t SLTU = 0b00000011;
+};
+
+int32_t alu::calculate(int16_t in1, int16_t in2, int8_t op){
+    int32_t out; 
+    switch (op) {
+        case ADD: out = in1 + in2; break;
+        case SUB: out = in1 - in2; break;
+        case XOR: out = in1 ^ in2; break;
+        case OR: out = in1 | in2; break;
+        case AND: out = in1 & in2; break;
+        case SLL: out = (uint32_t)in1 << (uint32_t)in2; break;
+        case SRL: out = (uint32_t)in1 >> (uint32_t)in2; break;
+        case SRA: out = in1 >> in2; break;
+        case SLT: out = 0 | (in1 < in2); break;
+        case SLTU: out = 0 | ((uint32_t)in1 < (uint32_t)in2); break;
+        default: out = 0; std::cout << "ALU: invalid aluOp" << std::endl;
     }
     return out;
 }

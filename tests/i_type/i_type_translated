@@ -1,0 +1,29 @@
+addi t0, x0, 5
+addi x5, x0, 5
+
+addi t1, t0, -10
+addi x6, x5, -10
+
+addi t2, t1, 3
+addi x7, x6, 3
+
+slli t3, t2, 2
+slli x28, x7, 2
+
+srai t4, t3, 1
+srai x29, x28, 1
+
+srli t4, t4, 1
+srli x29, x29, 1
+
+xori t3, t3, -1
+xori x28, x28, -1
+
+andi t5, t1, 0x7f0   //2032
+andi x30, x6, 0x7f0
+
+ori t6, t4, 0x7f0
+ori x31, x29, 0x7f0
+
+slti t0, t3, 0x123    //291
+slti x5, x28, 0x123

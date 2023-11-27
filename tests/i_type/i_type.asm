@@ -10,3 +10,4 @@ andi t5, t1, 0x7f0
 ori t6, t4, 0x7f0
 slti t0, t3, 0x123
 nop
+

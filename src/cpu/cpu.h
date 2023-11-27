@@ -42,11 +42,11 @@ private:
     uint8_t getrs2(uint32_t instr);
     uint8_t getfunct3(uint32_t instr);
     uint8_t getfunct7(uint32_t instr);
-    uint16_t getimm12(uint32_t instr);
+    int16_t getimm12(uint32_t instr);
     uint32_t get_branch_imm(uint32_t instr);
     uint32_t get_jal_offset(uint32_t instr);
     uint8_t getALU_op(uint32_t instr);
-    string convertASM(uint8_t op, uint8_t in1, uint8_t in2);
+    string stringify(int32_t line, int8_t rd,int8_t rs1,int16_t rs2);
     // EXECUTE
     void r_type(uint32_t instr);
     void i_type(uint32_t instr);
@@ -57,6 +57,18 @@ private:
     void jalr(uint32_t instr);
     void lui(uint32_t instr);
     void auipc(uint32_t instr);
+
+    //DELETE, issue with #include alu.h
+    const static int8_t ADD = 0b00000000; // alu opcodes
+    const static int8_t SUB = 0b00100000;
+    const static int8_t OR = 0b00000110; 
+    const static int8_t AND = 0b00000111;
+    const static int8_t XOR = 0b00000100;
+    const static int8_t SRL = 0b00000101;
+    const static int8_t SRA = 0b00100101;
+    const static int8_t SLL = 0b00000001;
+    const static int8_t SLT = 0b00000010;
+    const static int8_t SLTU = 0b00000011;
 };
 
 #endif
