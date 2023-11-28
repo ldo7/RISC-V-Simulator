@@ -108,6 +108,43 @@ uint8_t cpu::getALU_op(uint32_t instr)
         return funct3 | funct7;
     return funct3;
 }
+uint32_t cpu::get_branch_imm(uint32_t instr)
+{
+    uint32_t imm = 0;
+    uint32_t imm_0 = 0;
+    uint32_t imm_11 = (instr >> 7) & 0b0000000;
+    uint32_t imm_4_1 = (instr >> 8) & 0b00001111;
+    uint32_t imm_10_5 = (instr >> 25) & 0b0000000000000;
+    uint32_t imm_12 = (instr >> 31) & 0b0000000000000000000000000000;
+
+    // Combine the extracted bits to get the 13-bit immediate
+    imm = imm_0 | imm_11 | imm_4_1 | imm_10_5 | imm_12;
+
+    // add sign extension if imm is negative
+    if ((imm_12 >> 12) != 0){
+        imm = imm | 0xffffe000; 
+    }
+    
+    return imm;
+}
+uint32_t cpu::get_jal_offset(uint32_t instr)
+{
+    uint32_t offset = 0;
+    uint32_t offset_0 = 0;
+    uint32_t offset20 = (instr & 0x80000000) >> 11;
+    uint32_t offset10_1 = (instr & 0b01111111111000000000000000000000) >> 20;
+    uint32_t offset11 =    (instr & 0b00000000000100000000000000000000) >> 9;
+    uint32_t offset19_12= (instr & 0b00000000000011111111000000000000);
+
+    // Combine the extracted bits to get the 21-bit offset
+    offset = offset20 | offset19_12 | offset11 | offset10_1 | offset_0;
+
+    // add sign extension if the offset is negative
+    if ((offset20 >> 20) != 0){
+        offset = offset | 0xfff00000; 
+    }
+    return offset;
+}
 
 void cpu::r_type(uint32_t instr)
 {
