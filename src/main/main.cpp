@@ -4,10 +4,11 @@
 #include <ctime>
 #include <vector>
 #include <unistd.h>
+#include <string.h>
 #include "../cpu/cpu.cpp"
 using namespace std;
 
-vector<uint32_t> readFile();
+vector<uint32_t> readFile(string filename);
 void writeFile();
 void displayOptions();
 void userInput();
