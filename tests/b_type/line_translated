@@ -1,0 +1,36 @@
+lui     x5, %hi(-3)           
+addi    x5, x5, %lo(-3)
+lw x6, 0(x5)
+lui     x5, %hi(7)          
+addi    x5, x5, %lo(7)
+lw x7, 0(x5)
+lui     x5, %hi(25)           
+addi    x5, x5, %lo(25)
+lw x28, 0(x5)
+add x29, x0, x0              
+mul_m_x:                     
+    bge x6, x0, move_t1
+    sub x30, x0, x6
+    jal x0, check_t2
+move_t1:
+    add x30, x0, x6
+check_t2:
+    bge x7, x0, move_t2
+    sub x31, x0, x7
+    jal x0, multiply
+move_t2:
+    add x31, x0, x7
+multiply:
+    beq x30, x0, rectify_sign
+    add x29, x29, x31
+    addi x30, x30, -1
+    jal x0, multiply
+rectify_sign:
+    xor x5, x6, x7
+    bge x5, x0, add_c
+    sub x29, x0, x29
+add_c:
+    add x29, x29, x28
+lui     x5, %hi(-1)
+addi    x5, x5, %lo(-1)
+sw x29, 0(x5)

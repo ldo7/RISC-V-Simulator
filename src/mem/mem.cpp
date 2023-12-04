@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 #include <iostream>
+=======
+>>>>>>> origin/main
 #include "mem.h"
 using namespace std;
 

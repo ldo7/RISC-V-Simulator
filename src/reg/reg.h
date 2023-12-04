@@ -1,5 +1,6 @@
 #include <cstdint>
 
+<<<<<<< HEAD
 #ifndef REGISTER_H
 #define REGISTER_H
 
@@ -15,10 +16,26 @@ public:
     void writeReg(uint8_t index, uint32_t value);  // Write a 32-bit register
     // void reset();                                   // Reset all registers to zero
 >>>>>>> main
+=======
+#ifndef __REG_H
+#define __REG_H
+
+class reg
+{
+public:
+    reg();
+    uint32_t readReg(uint8_t index) const;        // Read a 32-bit register
+    void writeReg(uint8_t index, uint32_t value); // Write a 32-bit register
+    // void reset();                                   // Reset all registers to zero
+>>>>>>> origin/main
 private:
     static const int NUM_REGISTERS = 32;
     uint32_t registers[NUM_REGISTERS];
     // array<uint32_t, 32> registers;
 };
 
+<<<<<<< HEAD
 #endif 
+=======
+#endif
+>>>>>>> origin/main
