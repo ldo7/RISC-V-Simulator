@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 #include <iostream>
-=======
->>>>>>> origin/main
 #include "mem.h"
 using namespace std;
 
@@ -34,7 +31,4 @@ void mem::set_mem(uint32_t addr, uint32_t val){
     }
     sram[addr] = val;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> main

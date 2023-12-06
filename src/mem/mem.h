@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstdint>
-<<<<<<< HEAD
 // #include <vector>
 
 #ifndef RISCV_SIMULATOR_MEM_H
@@ -8,14 +7,6 @@
 
 class mem {
     const int mem_size = 2048;  //change to hashmap
-=======
-
-#ifndef __MEM_H
-#define __MEM_H
-
-class mem {
-    const int static mem_size = 2048; 
->>>>>>> origin/main
     uint32_t sram[2048];
 public:
     mem();
