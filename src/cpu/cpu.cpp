@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-#include "cpu.h"
-
-cpu::cpu(){
-    //initialize alu ,mem, reg, etc.
-
-=======
 #include <iostream>
 #include "cpu.h"
 using namespace std;
@@ -276,5 +269,4 @@ string cpu::stringify(int32_t instr, int8_t rd,int8_t rs1,int16_t rs2)
     if (opcode == I) str += ", " + to_string(rs2);
     else str += ", x" + to_string(rs2);
     return str;
->>>>>>> origin/main
 }
