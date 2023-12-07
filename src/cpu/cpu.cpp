@@ -5,49 +5,49 @@ using namespace std;
 bool debug = true;
 uint8_t x=0;
 
-cpu::cpu(vector<uint32_t> instr)
+cpu::cpu(mem imem,mem dmem)
 {
-    this->instr = instr;
+    this->imem = imem;
+    this->dmem = dmem;
     PC = 0;
 }
 
 void cpu::run()
 {
-    for (int i = 0; i < instr.size(); i++)
-    {
-        uint8_t opcode = getOpcode(instr[i]);
+    for (int i = 0; i < imem.getSize(); i++){
+        uint8_t opcode = getOpcode(imem.getMem(i));
         switch (opcode)
         {
         case R:
-            r_type(instr[i]);
+            r_type(imem.getMem(i));
             PC += 4;
             break;
         case I:
-            i_type(instr[i]);
+            i_type(imem.getMem(i));
             PC += 4;
             break;
         case S:
-            s_type(instr[i]);
+            s_type(imem.getMem(i));
             PC += 4;
             break;
         case L:
-            l_type(instr[i]);
+            l_type(imem.getMem(i));
             PC += 4;
             break;
         case B:
-            b_type(instr[i]);
+            b_type(imem.getMem(i));
             break;
         case JAL:
-            jal(instr[i]);
+            jal(imem.getMem(i));
             break;
         case JALR:
-            jalr(instr[i]);
+            jalr(imem.getMem(i));
             break;
         case LUI:
-            lui(instr[i]);
+            lui(imem.getMem(i));
             break;
         case AUIPC:
-            auipc(instr[i]);
+            auipc(imem.getMem(i));
             break;
         }
     }
@@ -64,7 +64,7 @@ uint32_t cpu::getReg(uint8_t index)
 }
 uint32_t cpu::getMem(uint32_t addr)
 {
-    return mem.get_mem(addr);
+    return dmem.getMem(addr);
 }
 
 // DECODE FUNCTIONS
@@ -184,8 +184,8 @@ void cpu::i_type(uint32_t instr)
     }
     // DEBUG
     cout << "val1:" << static_cast<int>(val1) << " val2:" << static_cast<int>(val2) << " result:" << static_cast<int>(result) << endl;
-    cout << "(binary)result:" << bitset<32>(result)<<endl;
-    cout << "register: "<<reg.readReg(rd)<<endl;  
+    // cout << "(binary)result:" << bitset<32>(result)<<endl;
+    // cout << "register: "<<reg.readReg(rd)<<endl;  
 }
 void cpu::s_type(uint32_t instr)
 {

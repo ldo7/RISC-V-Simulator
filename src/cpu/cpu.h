@@ -13,18 +13,18 @@
 class cpu
 {
 public: // functions called in Main
-    cpu(vector<uint32_t>);
+    cpu(mem,mem);
     void run();
     uint32_t getPC();
     uint32_t getReg(uint8_t index);
     uint32_t getMem(uint32_t addr);
 private:
-    int num;
-    mem mem;
+    mem imem;
+    mem dmem;
     reg reg;
     alu alu;
     uint32_t PC;
-    vector<uint32_t> instr;
+    // vector<uint32_t> instr;
     // OPCODES
     const static uint8_t R = 0b00110011;    
     const static uint8_t I = 0b00010011;   
