@@ -146,6 +146,7 @@ uint32_t cpu::get_jal_offset(uint32_t instr)
     return offset;
 }
 
+
 void cpu::r_type(uint32_t instr)
 {
     uint8_t alu_op = getALU_op(instr);
@@ -176,16 +177,12 @@ void cpu::i_type(uint32_t instr)
 
     cout << stringify(instr, rd, rs1, val2) << endl;
     int32_t result = alu.calculate(val1, val2, alu_op); // execute
-    reg.writeReg(x, result);                           // write to reg
+    reg.writeReg(rd, result);                           // write to reg
 
-    if(debug){
-        x=rd;
-        debug=false;
-    }
     // DEBUG
     cout << "val1:" << static_cast<int>(val1) << " val2:" << static_cast<int>(val2) << " result:" << static_cast<int>(result) << endl;
     // cout << "(binary)result:" << bitset<32>(result)<<endl;
-    // cout << "register: "<<reg.readReg(rd)<<endl;  
+    // cout << "register: "<<reg.readReg(rd)<<endl;   //check if stored properly
 }
 void cpu::s_type(uint32_t instr)
 {
@@ -277,3 +274,4 @@ string cpu::stringify(int32_t instr, int8_t rd,int8_t rs1,int16_t rs2)
     else str += ", x" + to_string(rs2);
     return str;
 }
+
