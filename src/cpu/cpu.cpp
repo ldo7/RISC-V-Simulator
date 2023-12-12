@@ -220,11 +220,11 @@ void cpu::b_type(uint32_t instr)
             break;
     }
 
-    // Update the program counter based on branch result
+    // Using program counter to jump branch result
     if (branch_taken) {
         PC += offset;
     } else {
-        PC += 4; // Move to the next instruction
+        PC += 4; // Jump to next instruction
     }
 }
 
