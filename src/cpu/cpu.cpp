@@ -180,8 +180,65 @@ void cpu::i_type(uint32_t instr)
     // cout << "(binary)result:" << bitset<32>(result)<<endl;
     // cout << "register: "<<reg.readReg(rd)<<endl;   //check if stored properly
 }
+
+void cpu::byte(uint32_t instr, uint16_t immBit, int loadStore){
+    if (loadStore == 0){
+
+    }
+    if(loadStore == 1){
+
+    }
+}
+
+void cpu::halfword(uint32_t instr, uint16_t immBit, int loadStore){
+    if (loadStore == 0){
+
+    }
+    if(loadStore == 1){
+        
+    }
+}
+
+void cpu::word(uint32_t instr, uint16_t immBit, int loadStore){
+    //check if string
+    //if string,
+
+    if (loadStore == 0){
+
+    }
+    if(loadStore == 1){
+        
+    }
+}
+
 void cpu::s_type(uint32_t instr)
-{
+{   
+    //following S-format
+    // imm[11:5] || rs2 || rs1 || function3 || imm[4:0] || opcode
+    // 7 bits || 5 bits || 5 bits || 3 bits || 5 bits || 7 bits
+
+    uint8_t rd = getrd(instr);
+    uint8_t rs1 = getrs1(instr);
+    int8_t rs2 = getrs2(instr);
+
+    uint8_t funct3 = getfunct3(instr);
+    uint8_t funct7 = getfunct7(instr);
+    //pass destination register or function7
+    //function 3, (same as load) determines size
+
+    //pass instruction, immediate, and loadStore value
+    //loadStore will be 0 for store and 1 for load
+    //and can pass opcode (however, opcode should always be 0 for load and store)
+    switch(funct3){
+        case '000':
+            //pass to byte function w/ 'S' string for store
+        case '001':
+            //pass to halfword function w/ 'S'
+        case '010':
+            //pass to word w/ 'S'
+    }
+
+
 }
 void cpu::b_type(uint32_t instr)
 {

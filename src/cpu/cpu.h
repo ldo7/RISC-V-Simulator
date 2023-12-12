@@ -57,6 +57,13 @@ private:
     void lui(uint32_t instr);
     void auipc(uint32_t instr);
 
+    //for load and store functions byte, halfword, word
+    void byte(uint32_t instr, uint16_t immBit, int loadStore);
+    void halfword(uint32_t instr, uint16_t immBit, int loadStore);
+    void word(uint32_t instr, uint16_t immBit, int loadStore);
+
+
+
     //DELETE, issue with #include alu.h
     const static int8_t ADD = 0b00000000; // alu opcodes
     const static int8_t SUB = 0b00100000;

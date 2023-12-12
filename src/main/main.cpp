@@ -3,8 +3,14 @@
 #include <bitset>
 #include <ctime>
 #include <vector>
-#include <unistd.h>
+//#include <unistd.h>
+
+//for vscode, needed to switch unistd to io.h, and include algorithm library dependency for removeif function
+#include <io.h>
+#include <algorithm>
 #include "../cpu/cpu.cpp"
+#include <string>
+
 using namespace std;
 
 vector<uint32_t> readFile();
@@ -134,7 +140,7 @@ void userInput()
   getline(cin, input);
 
   // Remove all whitespaces from input
-  input.erase(remove_if(input.begin(), input.end(), ::isspace), input.end());
+  input.erase((remove_if(input.begin(), input.end(), ::isspace)), input.end());
   string c = input.substr(0, 1);
   int num;
 
