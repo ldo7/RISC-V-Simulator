@@ -235,7 +235,7 @@ void cpu::word(uint32_t instr, uint16_t bitShift, int loadStore){
 
     }
     if(loadStore == 1){
-        
+        //check here whether signed or unsigned?
     }
 }
 
@@ -263,16 +263,16 @@ void cpu::s_type(uint32_t instr)
     
     switch(funct3){
         case '000':
-            //pass to byte function w/ 'S' string for store
+            //pass to byte function w/ '0', key for store
             byte(instr, storeBit, storeLoad);
             break;
         case '001':
-            //pass to halfword function w/ 'S'
+            //pass to halfword function w/ '0', key for store
             halfword(instr, storeBit, storeLoad);
             break;
 
         case '010':
-            //pass to word w/ 'S'
+            //pass to word function w/ '0', key for store
             word(instr, storeBit, storeLoad);
             break;
         default:
@@ -288,10 +288,37 @@ void cpu::b_type(uint32_t instr)
 }
 void cpu::l_type(uint32_t instr)
 {   
-    int storeLoad = '1';
     //following L-format
     // imm[11:0] || rs1 || function3 || rd || opcode
     // 12 bits || 5 bits || 3 bits || 5 bits || 7 bits
+    int storeLoad = 1;
+    uint8_t rd = getrd(instr);
+    uint8_t rs1 = getrs1(instr);
+    int8_t rs2 = getrs2(instr);
+
+    uint8_t funct3 = getfunct3(instr);
+    uint8_t funct7 = getfunct7(instr);
+    //getimm12
+
+    switch(funct3){
+        case '000':
+            //pass to byte function w/ '1', key for load
+            //byte(instr, storeBit, storeLoad);
+            break;
+        case '001':
+            //pass to halfword function w/ '1', key for load
+            //halfword(instr, storeBit, storeLoad);
+            break;
+
+        case '010':
+            //pass to word w/ '1', key for load
+            //word(instr, storeBit, storeLoad);
+            break;
+        default:
+            //not store byte, halfword, or word
+            break;
+    }
+    
 
 }
 void cpu::jal(uint32_t instr)
