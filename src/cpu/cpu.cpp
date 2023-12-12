@@ -64,6 +64,11 @@ uint32_t cpu::getMem(uint32_t addr)
     return mem.get_mem(addr);
 }
 
+/*void cpu::setMem(uint32_t addr, uint8_t soureRegVal){
+    mem.set_mem
+}*/
+
+
 // DECODE FUNCTIONS
 uint8_t cpu::getOpcode(uint32_t instr)
 {
@@ -181,7 +186,14 @@ void cpu::i_type(uint32_t instr)
     // cout << "register: "<<reg.readReg(rd)<<endl;   //check if stored properly
 }
 
-void cpu::byte(uint32_t instr, uint16_t immBit, int loadStore){
+void cpu::byte(uint32_t instr, uint16_t bitShift, int loadStore){
+    
+    /*
+    32 bit instr 
+    bitShift (16 bit)
+    loadStore will be 0 for store and 1 for load
+    */
+
     if (loadStore == 0){
 
     }
@@ -202,8 +214,15 @@ void cpu::halfword(uint32_t instr, uint16_t immBit, int loadStore){
 void cpu::word(uint32_t instr, uint16_t immBit, int loadStore){
     //check if string
     //if string,
-
+    uint8_t sourceReg = getrs1(instr);
+    uint8_t baseReg = getrs2(instr);
+    
     if (loadStore == 0){
+        //store word
+        uint8_t sourceRegVal = getReg(sourceReg);
+        uint8_t baseRegVal = getReg(baseReg);
+        uint32_t memAddr = alu.calculate(baseRegVal,immBit, 0);
+        mem.set_mem(memAddr, sourceRegVal);
 
     }
     if(loadStore == 1){
@@ -216,26 +235,41 @@ void cpu::s_type(uint32_t instr)
     //following S-format
     // imm[11:5] || rs2 || rs1 || function3 || imm[4:0] || opcode
     // 7 bits || 5 bits || 5 bits || 3 bits || 5 bits || 7 bits
-
+    int storeLoad = 0;
     uint8_t rd = getrd(instr);
     uint8_t rs1 = getrs1(instr);
     int8_t rs2 = getrs2(instr);
 
     uint8_t funct3 = getfunct3(instr);
     uint8_t funct7 = getfunct7(instr);
+
+    //get 16 bit per RISC-V architecture by shifting funct 7 by 5 bits and combine with rd
+    uint16_t storeBit = (((uint16_t) funct7) << 5) | (uint16_t) rd;
     //pass destination register or function7
     //function 3, (same as load) determines size
 
     //pass instruction, immediate, and loadStore value
     //loadStore will be 0 for store and 1 for load
     //and can pass opcode (however, opcode should always be 0 for load and store)
+    
     switch(funct3){
         case '000':
             //pass to byte function w/ 'S' string for store
+            byte(instr, storeBit, storeLoad);
+            break;
         case '001':
             //pass to halfword function w/ 'S'
+            halfword(instr, storeBit, storeLoad);
+            break;
+
         case '010':
             //pass to word w/ 'S'
+            word(instr, storeBit, storeLoad);
+            break;
+        default:
+            //not store byte, halfword, or word
+            break;
+
     }
 
 
@@ -244,7 +278,12 @@ void cpu::b_type(uint32_t instr)
 {
 }
 void cpu::l_type(uint32_t instr)
-{
+{   
+    int storeLoad = '1';
+    //following L-format
+    // imm[11:0] || rs1 || function3 || rd || opcode
+    // 12 bits || 5 bits || 3 bits || 5 bits || 7 bits
+
 }
 void cpu::jal(uint32_t instr)
 {

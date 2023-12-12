@@ -17,6 +17,7 @@ public: // functions called in Main
     uint32_t getPC();
     uint32_t getReg(uint8_t index);
     uint32_t getMem(uint32_t addr);
+    //void setMem(uint32_t addr, uint8_t soureRegVal);
 private:
     int num;
     mem mem;
