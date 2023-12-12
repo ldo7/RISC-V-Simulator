@@ -185,7 +185,49 @@ void cpu::s_type(uint32_t instr)
 }
 void cpu::b_type(uint32_t instr)
 {
+     uint8_t funct3 = getfunct3(instr);
+    uint32_t offset = get_branch_imm(instr);
+    uint8_t rs1 = getrs1(instr);
+    uint8_t rs2 = getrs2(instr);
+    
+    cout << stringify(instr, rs1, rs2, offset) << endl;
+
+    // Execute the branch instruction //
+    // B-typed
+    
+    bool branch_taken = false;
+    switch (funct3) {
+        case 0b000: // BEQ
+            branch_taken = (reg.readReg(rs1) == reg.readReg(rs2));
+            break;
+        case 0b001: // BNE
+            branch_taken = (reg.readReg(rs1) != reg.readReg(rs2));
+            break;
+        case 0b100: // BLT
+            branch_taken = (static_cast<int32_t>(reg.readReg(rs1)) < static_cast<int32_t>(reg.readReg(rs2)));
+            break;
+        case 0b101: // BGE
+            branch_taken = (static_cast<int32_t>(reg.readReg(rs1)) >= static_cast<int32_t>(reg.readReg(rs2)));
+            break;
+        case 0b110: // BLTU
+            branch_taken = (reg.readReg(rs1) < reg.readReg(rs2));
+            break;
+        case 0b111: // BGEU
+            branch_taken = (reg.readReg(rs1) >= reg.readReg(rs2));
+            break;
+        default:
+            // Handle unsupported funct3 values
+            break;
+    }
+
+    // Update the program counter based on branch result
+    if (branch_taken) {
+        PC += offset;
+    } else {
+        PC += 4; // Move to the next instruction
+    }
 }
+
 void cpu::l_type(uint32_t instr)
 {
 }
