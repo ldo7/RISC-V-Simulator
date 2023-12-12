@@ -187,14 +187,15 @@ void cpu::i_type(uint32_t instr)
 }
 
 void cpu::byte(uint32_t instr, uint16_t bitShift, int loadStore){
-    
-    /*
-    32 bit instr 
-    bitShift (16 bit)
-    loadStore will be 0 for store and 1 for load
-    */
+    uint8_t sourceReg = getrs1(instr);
 
     if (loadStore == 0){
+        uint8_t baseReg = getrs2(instr);
+        uint8_t sourceRegVal = getReg(sourceReg);
+        uint32_t shiftSourceVal = sourceRegVal >> 24;
+        uint8_t baseRegVal = getReg(baseReg);
+        uint32_t memAddr = alu.calculate(baseRegVal,bitShift, 0);
+        mem.set_mem(memAddr, shiftSourceVal);
 
     }
     if(loadStore == 1){
@@ -202,8 +203,16 @@ void cpu::byte(uint32_t instr, uint16_t bitShift, int loadStore){
     }
 }
 
-void cpu::halfword(uint32_t instr, uint16_t immBit, int loadStore){
+void cpu::halfword(uint32_t instr, uint16_t bitShift, int loadStore){
+    uint8_t sourceReg = getrs1(instr);
+
     if (loadStore == 0){
+        uint8_t baseReg = getrs2(instr);
+        uint8_t sourceRegVal = getReg(sourceReg);
+        uint32_t shiftSourceVal = sourceRegVal >> 16;
+        uint8_t baseRegVal = getReg(baseReg);
+        uint32_t memAddr = alu.calculate(baseRegVal,bitShift, 0);
+        mem.set_mem(memAddr, shiftSourceVal);
 
     }
     if(loadStore == 1){
@@ -211,17 +220,17 @@ void cpu::halfword(uint32_t instr, uint16_t immBit, int loadStore){
     }
 }
 
-void cpu::word(uint32_t instr, uint16_t immBit, int loadStore){
+void cpu::word(uint32_t instr, uint16_t bitShift, int loadStore){
     //check if string
     //if string,
     uint8_t sourceReg = getrs1(instr);
-    uint8_t baseReg = getrs2(instr);
     
     if (loadStore == 0){
         //store word
+        uint8_t baseReg = getrs2(instr);
         uint8_t sourceRegVal = getReg(sourceReg);
         uint8_t baseRegVal = getReg(baseReg);
-        uint32_t memAddr = alu.calculate(baseRegVal,immBit, 0);
+        uint32_t memAddr = alu.calculate(baseRegVal,bitShift, 0);
         mem.set_mem(memAddr, sourceRegVal);
 
     }
