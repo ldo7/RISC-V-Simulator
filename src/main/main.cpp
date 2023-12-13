@@ -20,6 +20,8 @@ uint32_t breakpoints[5] = {0xFFFFFFFF}; // initialize to FF (never reached)
 
 int main()
 {
+  
+  userInput();  // REQUEST USER INPUT
   string filename = "input.dat";
   vector<uint32_t> instructions = readFile(filename); // LOAD INSTRUCTIONS 
   cpu cpu(instructions);                      // INTANTIATE & RUN CPU
@@ -27,7 +29,7 @@ int main()
   // bool cpu_is_running = true;
   // while (true)
   // {
-  // userInput();  // REQUEST USER INPUT
+ 
   // clockStart();
   // cpu.fetch();
   // writeFile();
@@ -151,59 +153,76 @@ void userInput()
   else if (c == "s")
   {
   }
-  // x0 - x31
-  else if (c == "x")
+  // x0 - x31 - display the register
+  else if (command == "x")
   {
-    c = input.substr(1, 2);
-    num = stoi(c);
-    if (num > 31)
-      cout << "Invalid input\n";
-    // else{
-    //     cout << CPU.getReg(num);
-    // }
+      string regStr = input.substr(1);
+        try
+        {
+          num = stoi(regStr);  // convert the input data type 
+          if (num >= 0 && num <= 31)
+            {
+              cout << "Register x" << num << ": " << cpu.getReg(num) << endl;
+            }
+          else
+            {
+              cout << "Invalid register value\n";
+            }
+        }
+        catch (invalid_argument const &e)
+        {
+            cout << "Invalid register value\n";
+        }
   }
-  // 0x12345678 - return val at address
-  else if (c == "0")
-  {
-    c = input.substr(2, 8);
-    num = stoi(c);
-    // cout << CPU.getMem(num);
+  // pc - return PC value
+  
+  else if (command == "pc")
+    {
+      cout << "PC = " << hex << cpu.getPC() << dec << endl;   // display the PC value
+    }
+
+  // 0x12345678 - return content at an address
+
+  else if (command == "0")
+    {
+      string addrStr = input.substr(1);
+      try
+        {
+        num = stoi(addrStr, nullptr, 16);
+        cout << "Value at this address 0x" << hex << num << ": " << cpu.getMem(num) << dec << endl;
+        }
+      catch (invalid_argument const &e)
+        {
+          cout << "Invalid address\n";
+        }
   }
-  // pc - return PC
-  else if (c == "p")
+// b[pc] - add breakpoint assume format -> b[0x12345678]
+
+  else if (command == "b")
   {
-    if (input != "pc")
-      cout << "Invalid input\n";
-    // else{
-    //     cout << "0x"<<CPU.getPC();
-    // }
-  }
-  // insn - return NEXT asm instruction
-  else if (c == "i")
-  {
-    if (input != "insn")
-      cout << "Invalid input\n";
-    // else{
-    //     cout << CPU.debug();
-    // }
-  }
-  // b[pc] - add breakpoint     assume format -> b[0x12345678]
-  else if (c == "b")
-  {
-    c = input.substr(4, 8);
-    num = stoi(c);
-    // ASSUME SORTED IN-ORDER....
-    for (int i = 0; i < 5; i++)
-    { // check is breakpoints[] is full
-      if (breakpoints[i] != 0xFFFFFFFF)
+      string addrStr = input.substr(2, 8);
+      try
+        {
+        num = stoi(addrStr, nullptr, 16);
+        // ASSUME SORTED IN-ORDER....
+        for (int i = 0; i < 5; i++)
+        {
+          if (breakpoints[i] == 0xFFFFFFFF)  // check if breakpoints[] is full
+          {
+            breakpoints[i] = num;
+            cout << "Breakpoint at address 0x" << hex << num << dec << endl;
+            break;
+          }
+        }
+      }
+      catch (invalid_argument const &e)
       {
-        breakpoints[i] = num;
-        break;
+        cout << "Invaid address\n";
       }
     }
-  }
-  else
-  {
-    cout << "Invalid input\n";
-  }
+// insn - view next instruction
+  else if (command == "insn")
+    {
+    
+    }
 }
