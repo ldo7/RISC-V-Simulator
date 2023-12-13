@@ -105,14 +105,22 @@ void cpu::run()
                 cout << "next instruction: " << stringify(instr) << endl;
                 break;
             case 'b':
-                cout << "enter a brekapoint (ex. 0x12345678): ";
-                getline(cin,bk);
-                bk = bk.substr(2,8);
+                //b[10] b[1]
+                // getline(cin,bk,']');
+                // cout << bk << endl;
+                bk = input.substr(2,1+bk.length());
                 num = stoi(bk);
+                if (num % 4 != 0) {
+                    cout << "invalid address" << endl;
+                    break;
+                }
+                
                 for (int i = 0; i < 5; i++)
                 {
-                    if(breakpoints[i]!=0) //assume no breakpt in 1st line
+                    if(breakpoints[i]!=0) {
                         breakpoints[i]=num;
+                        break;
+                    } //assume no breakpt in 1st line
                 }
                 break;
             default:
