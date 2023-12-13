@@ -304,7 +304,7 @@ void cpu::s_type(uint32_t instr)
             //pass to halfword function w/ '0', key for store
             halfword(instr, storeBit, storeLoad);
             break;
-        case 0b0101:
+        case 0b010:
             //pass to word function w/ '0', key for store
             word(instr, storeBit, storeLoad);
             break;
