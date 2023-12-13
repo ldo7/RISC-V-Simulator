@@ -7,12 +7,12 @@ n/a = no tests available
 | ------- | --------------------- | ---------------------------------- | ----------- |
 | LUI     | `LUI rd,imm`          | Load Upper Immediate               |  |
 | AUIPC   | `AUIPC rd,offset`     | Add Upper Immediate to PC          | n/a |
-| JAL     | `JAL rd,offset`       | Jump and Link                      |  |
+| JAL     | `JAL rd,offset`       | Jump and Link                      | done |
 | JALR    | `JALR rd,rs1,offset`  | Jump and Link Register             | n/a |
-| BEQ     | `BEQ rs1,rs2,offset`  | Branch Equal                       |  |
+| BEQ     | `BEQ rs1,rs2,offset`  | Branch Equal                       | done |
 | BNE     | `BNE rs1,rs2,offset`  | Branch Not Equal                   | n/a |
 | BLT     | `BLT rs1,rs2,offset`  | Branch Less Than                   | n/a |
-| BGE     | `BGE rs1,rs2,offset`  | Branch Greater than Equal          |  |
+| BGE     | `BGE rs1,rs2,offset`  | Branch Greater than Equal          | done |
 | BLTU    | `BLTU rs1,rs2,offset` | Branch Less Than Unsigned          | n/a |
 | BGEU    | `BGEU rs1,rs2,offset` | Branch Greater than Equal Unsigned | n/a |
 | LB      | `LB rd,offset(rs1)`   | Load Byte                          |  |
@@ -25,7 +25,7 @@ n/a = no tests available
 | SW      | `SW rs2,offset(rs1)`  | Store Word                         |  |
 | ADDI    | `ADDI rd,rs1,imm`     | Add Immediate                      | done |
 | SLTI    | `SLTI rd,rs1,imm`     | Set Less Than Immediate            | done |
-| SLTIU   | `SLTIU rd,rs1,imm`    | Set Less Than Immediate Unsigned   |  |
+| SLTIU   | `SLTIU rd,rs1,imm`    | Set Less Than Immediate Unsigned   | n/a |
 | XORI    | `XORI rd,rs1,imm`     | Xor Immediate                      | done |
 | ORI     | `ORI rd,rs1,imm`      | Or Immediate                       | done |
 | ANDI    | `ANDI rd,rs1,imm`     | And Immediate                      | done |
