@@ -200,7 +200,18 @@ void cpu::byte(uint32_t instr, uint16_t bitShift, int loadStore, int sign = 1){
     }
     if(loadStore == 1){
         //check here whether signed or unsigned based on function argument param sign (only byte and halfword)
-
+        uint32_t memAddr = alu.calculate(sourceReg, bitShift, 0);
+        uint8_t memVal8 = mem.get_mem_byte(memAddr);
+        uint32_t memVal;
+        //check if signed and left most bit is 1 for negative
+        if(sign == 1  && (memVal8 & 0x80)){
+            memVal = (uint32_t)(uint32_t (memAddr) << 24);
+        }
+        else{
+            memVal = memAddr << 24;
+        }
+        uint8_t rd = getrd(instr);
+        reg.writeReg(rd, memVal);
     }
 }
 
@@ -218,13 +229,30 @@ void cpu::halfword(uint32_t instr, uint16_t bitShift, int loadStore, int sign = 
     }
     if(loadStore == 1){
         //check here whether signed or unsigned based on function argument param sign (only byte and halfword)
+        uint32_t memAddr = alu.calculate(sourceReg, bitShift, 0);
+        uint16_t memVal16 = mem.get_mem(memAddr);
+        uint32_t memVal;
+        //uint32_t memVal = memAddr << 16;
+        //uint8_t rd = getrd(instr);
+        //reg.writeReg(rd, memVal);
+
+        //lh signed
+        //check if negative (if 16th bit is 1, negative)
+        //if not negative, just cast to 32 bit
+        if(sign == 1 && (memVal16 & 0x8000)){
+            memVal = (uint32_t)(uint32_t (memAddr) << 16);
+        }
+        else{
+            memVal = memAddr << 16;
+        }
+        uint8_t rd = getrd(instr);
+        reg.writeReg(rd, memVal);
 
     }
 }
 
 void cpu::word(uint32_t instr, uint16_t bitShift, int loadStore, int sign = 1){
-    //check if string
-    //if string,
+    //always signed, never deals with unsigned
     uint8_t sourceReg = getrs1(instr);
     
     if (loadStore == 0){
@@ -238,7 +266,10 @@ void cpu::word(uint32_t instr, uint16_t bitShift, int loadStore, int sign = 1){
     }
     if(loadStore == 1){
         //check here whether signed or unsigned based on function argument param sign (only byte and halfword)
-        
+        uint8_t rd = getrd(instr);
+        uint8_t memAddr = alu.calculate(sourceReg, bitShift, 0);
+        uint32_t memVal = mem.get_mem(memAddr);
+        reg.writeReg(rd, memVal);
     }
 }
 
@@ -319,13 +350,14 @@ void cpu::l_type(uint32_t instr)
             if(funct3 = 0b101){
                 sign = 0;
             }
-            halfword(instr, storeBit, storeLoad);
+            halfword(instr, storeBit, storeLoad, sign);
     }
 
     if(funct3 == 0b010){
             //pass to word w/ '1', key for load
             //word(instr, storeBit, storeLoad);
             word(instr, storeBit, storeLoad);
+            
     }
     }
     
