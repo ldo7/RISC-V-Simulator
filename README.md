@@ -17,12 +17,12 @@ n/a = no tests available
 | BGEU    | `BGEU rs1,rs2,offset` | Branch Greater than Equal Unsigned | n/a |
 | LB      | `LB rd,offset(rs1)`   | Load Byte                          |  |
 | LH      | `LH rd,offset(rs1)`   | Load Half                          |  |
-| LW      | `LW rd,offset(rs1)`   | Load Word                          |  |
+| LW      | `LW rd,offset(rs1)`   | Load Word                          | done |
 | LBU     | `LBU rd,offset(rs1)`  | Load Byte Unsigned                 |  |
 | LHU     | `LHU rd,offset(rs1)`  | Load Half Unsigned                 |  |
 | SB      | `SB rs2,offset(rs1)`  | Store Byte                         |  |
 | SH      | `SH rs2,offset(rs1)`  | Store Half                         |  |
-| SW      | `SW rs2,offset(rs1)`  | Store Word                         |  |
+| SW      | `SW rs2,offset(rs1)`  | Store Word                         | done |
 | ADDI    | `ADDI rd,rs1,imm`     | Add Immediate                      | done |
 | SLTI    | `SLTI rd,rs1,imm`     | Set Less Than Immediate            | done |
 | SLTIU   | `SLTIU rd,rs1,imm`    | Set Less Than Immediate Unsigned   | n/a |
