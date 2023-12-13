@@ -158,34 +158,92 @@ void cpu::byte(uint32_t instr, uint16_t bitShift, int loadStore, int sign)
     uint8_t sourceReg = getrs2(instr);
 
     if (loadStore == 0)
-    {
+    {   
+        int16_t imm = getimm12(instr); 
         int8_t baseReg = getrs1(instr);
-        int8_t sourceRegVal = getReg(sourceReg);
-        int32_t shiftSourceVal = sourceRegVal >> 24;
+        int16_t sourceRegVal = getReg(sourceReg);
+        int32_t shiftSourceVal = (sourceRegVal & 0b00000000000000000000000011111111);
+        //>> 24;
         int8_t baseRegVal = getReg(baseReg);
-        int32_t memAddr = alu.calculate(baseRegVal, bitShift, 0);
+        int32_t memAddr = alu.calculate(baseRegVal, imm, 0);
         imem.setMem(memAddr, shiftSourceVal);
         cout <<"result: " <<shiftSourceVal<<endl;
     }
-    if(loadStore == 1){
+     if(loadStore == 1){
         //check here whether signed or unsigned based on function argument param sign (only byte and halfword)
-        int8_t sourceRegVal = getReg(sourceReg);
-        int32_t memAddr = alu.calculate(sourceRegVal, bitShift, 0);
-        int8_t memVal8 = dmem.getMem_byte(memAddr);
+        int8_t baseReg = getrs1(instr);
+        int8_t rd = getrd(instr);
+        int32_t imm = getimm12(instr);
+        int32_t baseAddr = getReg(baseReg);
+        int32_t memAddr = alu.calculate(baseAddr, imm, 0);
+        cout << "Mem Address: " << memAddr << endl;
+        int8_t memVal8 = dmem.getMem_byte(memAddr-dmem.getStartPC());
+        cout << "Get start" << dmem.getStartPC() << endl;
+        cout << "Dmem function: " << dmem.getMem_byte(memAddr-dmem.getStartPC());
         int32_t memVal;
+
+    cout << "Base Address: " << baseAddr << endl;
+    cout << "Immediate Value: " << imm << endl;
+    cout << "Calculated Mem Address: " << memAddr << endl;
+    cout << "Calculated Mem Value (memval8): " << memVal8 << endl;
         //check if signed and left most bit is 1 for negative
-        if(sign == 1  && (memVal8 & 0x80)){
-            memVal = (uint32_t)(uint32_t (memAddr) << 24);
-        }
-        else{
-            memVal = memAddr << 24;
-        }
-        uint8_t rd = getrd(instr);
+        //if(sign == 1  && (memVal8 & 0x80)){
+        if((((memVal8 & 0b10000000) >> 7 ) == 1)&& sign == 0){
+            memVal = 0xffffff00 | memVal8;
+            } else{
+                cout << "not negative" << endl;
+                memVal = (uint32_t) memVal8;
+            }
+        
+        cout << "Calculated Mem Value (memval): " << memVal << endl;
         reg.writeReg(rd, memVal);
-        cout <<"result: " <<static_cast<int>(memVal)<<endl;
+        cout <<"result: " <<memVal<<endl;
 
     }
 }
+       /* int16_t sourceRegVal = getReg(sourceReg);
+        int32_t memAddr = alu.calculate(sourceRegVal, bitShift, 0);
+        int8_t memVal8 = dmem.getMem_byte(memAddr);
+        int32_t memVal;
+
+        // Print memory content before load operation
+        cout << "Memory Content Before Load: ";
+        for (int i = 0; i < 10; ++i) {
+            cout << static_cast<int>(dmem.getMem_byte(i)) << " ";
+        }
+        cout << endl;
+
+        // Print information about memory access
+        cout << "Reading Memory at Address " << memAddr << ": " << static_cast<int>(memVal8) << endl;
+
+        //check if signed and left most bit is 1 for negative
+        if (sign == 1 && (memVal8 & 0x80))
+        {
+            // LB and negative
+            memVal = (static_cast<int32_t>(memVal8) << 24) >> 24;
+        }
+        else
+        {
+            // LB or LBU
+            memVal = static_cast<int32_t>(memVal8);
+        }
+
+        // Print information about the result
+        cout << "result: " << static_cast<int>(memVal) << endl;
+
+        // Print memory content after load operation
+        cout << "Memory Content After Load: ";
+        for (int i = 0; i < 10; ++i) {
+            cout << static_cast<int>(dmem.getMem_byte(i)) << " ";
+        }
+        cout << endl;
+
+        uint8_t rd = getrd(instr);
+        reg.writeReg(rd, memVal);
+        */
+        
+    
+
 void cpu::halfword(uint32_t instr, uint16_t bitShift, int loadStore, int sign)
 {
     uint8_t sourceReg = getrs2(instr);
@@ -228,7 +286,7 @@ void cpu::halfword(uint32_t instr, uint16_t bitShift, int loadStore, int sign)
     
     }
 }
-void cpu::word(uint32_t instr, uint8_t bitShift, int loadStore, int sign)
+void cpu::word(uint32_t instr, uint8_t bitShift, int loadStore)
 {
     // check if string
     // if string,
@@ -413,7 +471,7 @@ void cpu::l_type(uint32_t instr)
             if(funct3 == 0b101){
                 sign = 0;
             }
-            halfword(instr, storeBit, storeLoad);
+            halfword(instr, storeBit, storeLoad, sign);
     }
 
     if(funct3 == 0b010){

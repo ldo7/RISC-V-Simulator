@@ -18,12 +18,18 @@ uint32_t mem::getMem(uint32_t addr){
 }
 
 uint8_t mem::getMem_byte(uint32_t addr){
+    //const uint32_t mem_size2 = 1 << 32;  // 4 GB
+
     if (addr >= mem_size){
-        cout << "invalid memory address" << endl;
+        std::cout << "Mem: invalid memory address" << std::endl;
         return 0;
     }
-    return (uint8_t) (sram[addr] & 0x000000ff);
+    cout << "Valid memory" << endl;
+    cout << "Address: " << addr << endl;
+    cout << "S ram address: " << sram[addr] << endl;
+    uint8_t result = sram[addr] & 0xFF;
 }
+
 void mem::setMem(uint32_t addr, uint32_t val){
     if (addr >= mem_size){
         cout << "invalid memory address" << endl;

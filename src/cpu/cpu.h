@@ -64,7 +64,7 @@ private:
     //LOAD-STORE HELPER 
     void byte(uint32_t instr, uint16_t immBit, int loadStore, int sign = 1);
     void halfword(uint32_t instr, uint16_t immBit, int loadStore, int sign = 1);
-    void word(uint32_t instr, uint8_t immBit, int loadStore, int sign = 1);
+    void word(uint32_t instr, uint8_t immBit, int loadStore);
 
     //DELETE, issue with #include alu.h
     const static int8_t ADD = 0b00000000; // alu opcodes
