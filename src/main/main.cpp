@@ -224,6 +224,9 @@ void userInput()
 // insn - view next instruction
   else if (command == "insn")
     {
-    
+      cout << "Next instruction: " << cpu.getAsmInstruction() << endl; // use getAsmInstruction() return the next instruction
+    }
+    else {
+      cout << "Invalid input\n";
     }
 }
