@@ -59,9 +59,9 @@ private:
     void auipc(uint32_t instr);
 
     //for load and store functions byte, halfword, word
-    void byte(uint32_t instr, uint16_t immBit, int loadStore);
-    void halfword(uint32_t instr, uint16_t immBit, int loadStore);
-    void word(uint32_t instr, uint16_t immBit, int loadStore);
+    void byte(uint32_t instr, uint16_t immBit, int loadStore, int sign = 1);
+    void halfword(uint32_t instr, uint16_t immBit, int loadStore, int sign = 1);
+    void word(uint32_t instr, uint16_t immBit, int loadStore, int sign = 1);
 
 
 

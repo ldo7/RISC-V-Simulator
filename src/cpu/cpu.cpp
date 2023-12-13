@@ -186,7 +186,7 @@ void cpu::i_type(uint32_t instr)
     // cout << "register: "<<reg.readReg(rd)<<endl;   //check if stored properly
 }
 
-void cpu::byte(uint32_t instr, uint16_t bitShift, int loadStore){
+void cpu::byte(uint32_t instr, uint16_t bitShift, int loadStore, int sign = 1){
     uint8_t sourceReg = getrs1(instr);
 
     if (loadStore == 0){
@@ -199,11 +199,12 @@ void cpu::byte(uint32_t instr, uint16_t bitShift, int loadStore){
 
     }
     if(loadStore == 1){
+        //check here whether signed or unsigned based on function argument param sign (only byte and halfword)
 
     }
 }
 
-void cpu::halfword(uint32_t instr, uint16_t bitShift, int loadStore){
+void cpu::halfword(uint32_t instr, uint16_t bitShift, int loadStore, int sign = 1){
     uint8_t sourceReg = getrs1(instr);
 
     if (loadStore == 0){
@@ -216,11 +217,12 @@ void cpu::halfword(uint32_t instr, uint16_t bitShift, int loadStore){
 
     }
     if(loadStore == 1){
-        
+        //check here whether signed or unsigned based on function argument param sign (only byte and halfword)
+
     }
 }
 
-void cpu::word(uint32_t instr, uint16_t bitShift, int loadStore){
+void cpu::word(uint32_t instr, uint16_t bitShift, int loadStore, int sign = 1){
     //check if string
     //if string,
     uint8_t sourceReg = getrs1(instr);
@@ -235,7 +237,8 @@ void cpu::word(uint32_t instr, uint16_t bitShift, int loadStore){
 
     }
     if(loadStore == 1){
-        //check here whether signed or unsigned?
+        //check here whether signed or unsigned based on function argument param sign (only byte and halfword)
+        
     }
 }
 
@@ -262,16 +265,15 @@ void cpu::s_type(uint32_t instr)
     //and can pass opcode (however, opcode should always be 0 for load and store)
     
     switch(funct3){
-        case '000':
+        case 0b000:
             //pass to byte function w/ '0', key for store
             byte(instr, storeBit, storeLoad);
             break;
-        case '001':
+        case 0b001:
             //pass to halfword function w/ '0', key for store
             halfword(instr, storeBit, storeLoad);
             break;
-
-        case '010':
+        case 0b0101:
             //pass to word function w/ '0', key for store
             word(instr, storeBit, storeLoad);
             break;
@@ -295,28 +297,36 @@ void cpu::l_type(uint32_t instr)
     uint8_t rd = getrd(instr);
     uint8_t rs1 = getrs1(instr);
     int8_t rs2 = getrs2(instr);
+    uint16_t storeBit = getimm12(instr);
 
     uint8_t funct3 = getfunct3(instr);
     uint8_t funct7 = getfunct7(instr);
     //getimm12
 
-    switch(funct3){
-        case '000':
+    if(funct3 == 0b000 || funct3 == 0b100){
             //pass to byte function w/ '1', key for load
             //byte(instr, storeBit, storeLoad);
-            break;
-        case '001':
+            int sign = 1;
+            if(funct3 = 0b100){
+                sign = 0;
+            }
+            byte(instr, storeBit, storeLoad, sign);
+    }
+    if(funct3 == 0b001 || funct3 == 0b101){
             //pass to halfword function w/ '1', key for load
             //halfword(instr, storeBit, storeLoad);
-            break;
+            int sign = 1;
+            if(funct3 = 0b101){
+                sign = 0;
+            }
+            halfword(instr, storeBit, storeLoad);
+    }
 
-        case '010':
+    if(funct3 == 0b010){
             //pass to word w/ '1', key for load
             //word(instr, storeBit, storeLoad);
-            break;
-        default:
-            //not store byte, halfword, or word
-            break;
+            word(instr, storeBit, storeLoad);
+    }
     }
     
 
