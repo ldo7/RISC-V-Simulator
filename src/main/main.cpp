@@ -139,31 +139,32 @@ void userInput()
 
   // Remove all whitespaces from input
   input.erase(remove_if(input.begin(), input.end(), ::isspace), input.end());
-  string c = input.substr(0, 1);
+  string command = input.substr(0, 1);
   int num;
 
   // VALIDATE INPUT
   //  run - execute all
   //  c - continue
-  if (c == "r" || c == "c")
+  if (command == "r" || command == "c")
   {
     // clockStart();
   }
   // s - step through
-  else if (c == "s")
-  {
-  }
+  // else if (c == "s")
+  // {
+  // }
+
   // x0 - x31 - display the register
   else if (command == "x")
   {
-      string regStr = input.substr(1);
-        try
-        {
-          num = stoi(regStr);  // convert the input data type 
-          if (num >= 0 && num <= 31)
-            {
-              cout << "Register x" << num << ": " << cpu.getReg(num) << endl;
-            }
+    string regStr = input.substr(1);
+      try
+      {
+        num = stoi(regStr);  // convert the input data type 
+        if (num >= 0 && num <= 31)
+          {
+            cout << "Register x" << num << ": " << cpu.getReg(num) << endl;
+          }
           else
             {
               cout << "Invalid register value\n";
