@@ -5,7 +5,7 @@ n/a = no tests available
 
 | Symbol  | Format                | Description                        | STATUS      |
 | ------- | --------------------- | ---------------------------------- | ----------- |
-| LUI     | `LUI rd,imm`          | Load Upper Immediate               |  |
+| LUI     | `LUI rd,imm`          | Load Upper Immediate               | done |
 | AUIPC   | `AUIPC rd,offset`     | Add Upper Immediate to PC          | n/a |
 | JAL     | `JAL rd,offset`       | Jump and Link                      | done |
 | JALR    | `JALR rd,rs1,offset`  | Jump and Link Register             | n/a |
